@@ -1,0 +1,6 @@
+{
+  "name": "Bitcoin Miner Race Simulator",
+  "description": "Interactive Bitcoin Proof-of-Work simulator modeling multi-miner nonce races, SHA-256 verification, and hash rate analysis.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
