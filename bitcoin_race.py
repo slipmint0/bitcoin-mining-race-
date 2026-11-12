@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 import hashlib
 import time
 
-def simulate_bitcoin_race(block_text="King Solomon: 7 days in a week", target_prefix="0000"):
+def simulate_bitcoin_race(block_text="שבעה ימים בשבוע - חכמת שלמה", target_prefix="0000"):
     print(f"=== Bitcoin 2-Miner Proof-of-Work Race ===")
     print(f"Block Text: '{block_text}'")
     print(f"Target Prefix: '{target_prefix}' (Difficulty: {len(target_prefix)} leading hex zeros)")
@@ -72,5 +73,40 @@ def simulate_bitcoin_race(block_text="King Solomon: 7 days in a week", target_pr
         "time_taken": elapsed
     }
 
+def simulate_blessing_attempt(block_text="שבעה ימים בשבוע - חכמת שלמה", target_prefix="0000"):
+    import random
+    print("=== ברכת ניסיון ראשון / First Try (Blessing) ===")
+    print(f"Block Text / טקסט הבלוק: '{block_text}'")
+    print(f"Target Prefix / קידומת יעד: '{target_prefix}' (Odds: 1 in {16**len(target_prefix):,})")
+    
+    nonce_a = random.randint(1, 5000000) * 2
+    nonce_b = random.randint(1, 5000000) * 2 + 1
+    
+    hash_a = hashlib.sha256(f"{block_text}{nonce_a}".encode('utf-8')).hexdigest()
+    hash_b = hashlib.sha256(f"{block_text}{nonce_b}".encode('utf-8')).hexdigest()
+    
+    print(f"כורה א׳ (זוגי)   | נונס: {nonce_a:>8} | גיבוב: {hash_a}")
+    print(f"כורה ב׳ (אי-זוגי)| נונס: {nonce_b:>8} | גיבוב: {hash_b}")
+    
+    if hash_a.startswith(target_prefix):
+        print(f"\n✨ נס שלמה המלך! כורה א׳ פיצח את ה-Hash בניסיון בודד ראשון! (נונס: {nonce_a}) ✨")
+        return "Miner A"
+    elif hash_b.startswith(target_prefix):
+        print(f"\n✨ נס שלמה המלך! כורה ב׳ פיצח את ה-Hash בניסיון בודד ראשון! (נונס: {nonce_b}) ✨")
+        return "Miner B"
+    else:
+        print("\n[תוצאת ניסיון ראשון]: אף כורה לא פגע ביעד בניסיון בודד זה.")
+        print("שלמה המלך לימדנו: 'עוֹבֵד אַדְמָתוֹ יִשְׂבַּע לָחֶם' — הוכחת עבודה אמיתית דורשת התמדה וסריקה מלאה!")
+        return None
+
 if __name__ == "__main__":
-    simulate_bitcoin_race()
+    import sys
+    prefix = "0000"
+    for arg in sys.argv:
+        if arg.startswith("--difficulty="):
+            zeros = int(arg.split("=")[1])
+            prefix = "0" * zeros
+    if "--blessing" in sys.argv:
+        simulate_blessing_attempt(target_prefix=prefix)
+    else:
+        simulate_bitcoin_race(target_prefix=prefix)

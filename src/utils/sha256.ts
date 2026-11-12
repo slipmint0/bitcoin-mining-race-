@@ -17,17 +17,18 @@ const K = new Uint32Array([
 
 const W = new Uint32Array(64);
 
-export function sha256Hex(asciiStr: string): string {
-  // Convert string to bytes
-  const length = asciiStr.length;
+const encoder = new TextEncoder();
+
+export function sha256Hex(inputStr: string): string {
+  // Convert string to UTF-8 bytes
+  const inputBytes = encoder.encode(inputStr);
+  const length = inputBytes.length;
   // Compute padded length: multiple of 64 bytes
   const bitLength = length * 8;
   const paddedLength = ((length + 9 + 63) >> 6) << 6;
   const bytes = new Uint8Array(paddedLength);
 
-  for (let i = 0; i < length; i++) {
-    bytes[i] = asciiStr.charCodeAt(i);
-  }
+  bytes.set(inputBytes);
   bytes[length] = 0x80;
 
   // Append 64-bit big-endian original bit length
